@@ -117,7 +117,7 @@ class Fetcher
   # @param [ String|URI] The URL of the page.
   #
   # @return [ Array<URI> ] List of URIs pointing to each linked page.
-  def linked_pages(url, page)
+  def linked_pages(page, url = '')
     amount = page.at_css('amount text()').text.to_i
     total  = page.at_css('amount_total text()').text.to_i
 
@@ -183,7 +183,7 @@ class Fetcher
     stocks = stocks(page)
 
     upload_stocks(stocks.unshift(url)) if stocks.any?
-    linked_pages(url, page).each { |p| scrape p } if follow_linked_pages? url
+    linked_pages(page, url).each { |p| scrape p } if follow_linked_pages? url
   end
 
   # Save the list of stock links in a file. The location of that file is the
