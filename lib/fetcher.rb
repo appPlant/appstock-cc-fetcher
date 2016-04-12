@@ -121,7 +121,7 @@ class Fetcher
     amount = page.at_css('amount text()').text.to_i
     total  = page.at_css('amount_total text()').text.to_i
 
-    return [] if amount == 0
+    return [] if amount == 0 || amount >= total
 
     (1..(total / amount)).map { |offset| "#{url}&pageoffset=#{offset}" }
   rescue NoMethodError
