@@ -54,8 +54,8 @@ RSpec.describe Fetcher do
     describe '#fetch' do
       before { fetcher.run }
 
-      it("should't create the file box") do
-        expect(File).to_not exist(fetcher.file_box)
+      it("should't create the drop box") do
+        expect(File).to_not exist(fetcher.drop_box)
       end
     end
 
@@ -68,7 +68,7 @@ RSpec.describe Fetcher do
       end
 
       it('should create no files') do
-        expect(Dir.entries(fetcher.file_box).count).to be(2)
+        expect(Dir.entries(fetcher.drop_box).count).to be(2)
       end
     end
   end
@@ -150,9 +150,9 @@ RSpec.describe Fetcher do
       before { fetcher.run }
 
       it { expect(@url).to have_been_requested.times(lists) }
-      it('should create file box') { expect(File).to exist(fetcher.file_box) }
+      it('should create drop box') { expect(File).to exist(fetcher.drop_box) }
       it('should create 1 file') do
-        expect(Dir.entries(fetcher.file_box).count).to be(lists + 2)
+        expect(Dir.entries(fetcher.drop_box).count).to be(lists + 2)
       end
     end
 
@@ -166,9 +166,9 @@ RSpec.describe Fetcher do
       before { fetcher.run }
 
       it { expect(@url).to have_been_requested.times(lists) }
-      it('should create file box') { expect(File).to exist(fetcher.file_box) }
+      it('should create drop box') { expect(File).to exist(fetcher.drop_box) }
       it('should create 25 file') do
-        expect(Dir.entries(fetcher.file_box).count).to be(lists + 2)
+        expect(Dir.entries(fetcher.drop_box).count).to be(lists + 2)
       end
     end
 
@@ -182,9 +182,9 @@ RSpec.describe Fetcher do
       before { fetcher.run [branch_id] }
 
       it { expect(@url).to have_been_requested.times(lists) }
-      it('should create file box') { expect(File).to exist(fetcher.file_box) }
+      it('should create drop box') { expect(File).to exist(fetcher.drop_box) }
       it('should create 1 file') do
-        expect(Dir.entries(fetcher.file_box).count).to be(lists + 2)
+        expect(Dir.entries(fetcher.drop_box).count).to be(lists + 2)
       end
     end
   end
