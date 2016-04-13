@@ -128,6 +128,21 @@ class Fetcher
     []
   end
 
+  # Get absolute URL for the StocksFinder page for the specified branch.
+  #
+  # @param [ Int ] branch_id ID of the branch.
+  # @param [ Int] page The page offset, default to 1.
+  #
+  # @return [ URI ] The absolute URL.
+  def branch_url(branch_id, page: 1)
+    base = 'euroWebDe/servlets/financeinfos_ajax?page=StocksFinder&version=2'
+    url  = "#{base}&branch=#{branch_id}&FIGURE0=PER.EVALUATION&YEAR0=2016"
+
+    url << "&pageoffset=#{page}" if page > 1
+
+    abs_url(url)
+  end
+
   # Run the hydra with the given links to scrape the stocks from the response.
   # By default all branches form search page will be used.
   #
@@ -200,21 +215,6 @@ class Fetcher
     File.open(File.join(@file_box, "#{SecureRandom.uuid}.txt"), 'w+') do |file|
       stocks.each { |stock| file << "#{stock}\n" }
     end
-  end
-
-  # Get absolute URL for the StocksFinder page for the specified branch.
-  #
-  # @param [ Int ] branch_id ID of the branch.
-  # @param [ Int] page The page offset, default to 1.
-  #
-  # @return [ URI ] The absolute URL.
-  def branch_url(branch_id, page: 1)
-    base = 'euroWebDe/servlets/financeinfos_ajax?page=StocksFinder&version=2'
-    url  = "#{base}&branch=#{branch_id}&FIGURE0=PER.EVALUATION&YEAR0=2016"
-
-    url << "&pageoffset=#{page}" if page > 1
-
-    abs_url(url)
   end
 
   # Add host and protocol to the URI to be absolute.

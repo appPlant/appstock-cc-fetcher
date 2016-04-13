@@ -4,9 +4,28 @@ RSpec.describe Fetcher do
   let(:cc) { 'https://www.consorsbank.de/euroWebDe/servlets/financeinfos_ajax' }
   let(:base_url) { "#{cc}?version=2&#{params}" }
   let(:fetcher) { described_class.new }
+  let(:interfaces) { [:branches, :stocks, :linked_pages, :branch_url, :run] }
   subject { fetcher }
 
-  it { is_expected.to respond_to(:branches, :stocks, :linked_pages, :run) }
+  it { is_expected.to respond_to(*interfaces) }
+
+  describe '#branch_url' do
+    context 'when called with UTF-8 chars' do
+      it { expect { fetcher.branch_url('∫') }.to_not raise_error }
+    end
+
+    context 'when called for the 1st page of branch 1' do
+      subject { fetcher.branch_url(1, page: 1).to_s }
+      it { is_expected.to match('branch=1') }
+      it { is_expected.to_not match('pageoffset') }
+    end
+
+    context 'when called for the 2nd page of branch 1' do
+      subject { fetcher.branch_url(1, page: 2).to_s }
+      it { is_expected.to match('branch=1') }
+      it { is_expected.to match('pageoffset=2') }
+    end
+  end
 
   describe '#follow_linked_pages?' do
     let(:params) { 'page=StocksFinder&FIGURE0=PER.EVALUATION&YEAR0=2016' }
