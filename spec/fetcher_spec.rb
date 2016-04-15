@@ -134,57 +134,12 @@ RSpec.describe Fetcher do
   end
 
   describe '#run' do
-    before do
-      @url = stub_request(:get, /branch=#{branch_id}/i).to_return(body: content)
-      allow(fetcher).to receive(:branches).and_return [branch_id]
-    end
-
     context 'when #branches returns car rental only' do
-      include FakeFS::SpecHelpers
-
-      let(:content) { File.read('spec/fixtures/car_rentals.xml') }
-      let(:branch_id) { 2 }
-      let(:lists) { 1 }
-
-      before { fetcher.run }
-
-      it { expect(@url).to have_been_requested.times(lists) }
-      it('should create drop box') { expect(File).to exist(fetcher.drop_box) }
-      it('should create 1 file') do
-        expect(Dir.entries(fetcher.drop_box).count).to be(lists + 2)
-      end
+      include_examples '#run test suite', 'car_rentals.xml', 2, 1
     end
 
     context 'when #branches returns banking only' do
-      include FakeFS::SpecHelpers
-
-      let(:content) { File.read('spec/fixtures/banking.xml') }
-      let(:branch_id) { 4 }
-      let(:lists) { 25 }
-
-      before { fetcher.run }
-
-      it { expect(@url).to have_been_requested.times(lists) }
-      it('should create drop box') { expect(File).to exist(fetcher.drop_box) }
-      it('should create 25 file') do
-        expect(Dir.entries(fetcher.drop_box).count).to be(lists + 2)
-      end
-    end
-
-    context 'when called for car rental sector only' do
-      include FakeFS::SpecHelpers
-
-      let(:content) { File.read('spec/fixtures/car_rentals.xml') }
-      let(:branch_id) { 2 }
-      let(:lists) { 1 }
-
-      before { fetcher.run [branch_id] }
-
-      it { expect(@url).to have_been_requested.times(lists) }
-      it('should create drop box') { expect(File).to exist(fetcher.drop_box) }
-      it('should create 1 file') do
-        expect(Dir.entries(fetcher.drop_box).count).to be(lists + 2)
-      end
+      include_examples '#run test suite', 'banking.xml', 4, 25
     end
   end
 end
