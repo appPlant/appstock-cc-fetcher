@@ -42,14 +42,17 @@ class Fetcher
   #   Fetcher.new drop_box: '/Users/katzer/tmp'
   #
   # @param [ String ] drop_box: Optional information where to place the result.
+  # @param [ String ] per_page: Max count of links per page.
+  #                             Default is 20 and the maximum is 50.
   #
   # @return [ Fetcher ] A new fetcher instance.
-  def initialize(drop_box: 'vendor/mount')
+  def initialize(drop_box: 'vendor/mount', per_page: 20)
     @drop_box = File.join(drop_box, SecureRandom.uuid)
+    @per_page = [0, per_page.to_i].max
     @hydra    = Typhoeus::Hydra.new
   end
 
-  attr_reader :drop_box
+  attr_reader :drop_box, :per_page
 
   # Get a list of all branches from the OptionsBranch page.
   #
@@ -103,7 +106,7 @@ class Fetcher
   #
   # @return [ Boolean ] true if the linked pages have to be scraped as well.
   def follow_linked_pages?(url)
-    url.to_s.length <= 136 # URL with intpagenr has length > 136
+    url.to_s.length <= 149 # URL with pageoffset has length > 136
   end
 
   # Scrape all linked lists found on the specified search result page.
@@ -135,8 +138,8 @@ class Fetcher
   #
   # @return [ URI ] The absolute URL.
   def branch_url(branch_id, page: 1)
-    base = 'euroWebDe/servlets/financeinfos_ajax?page=StocksFinder&version=2'
-    url  = "#{base}&branch=#{branch_id}&FIGURE0=PER.EVALUATION&YEAR0=2016"
+    base = 'euroWebDe/servlets/financeinfos_ajax?page=StocksFinder&version=2&FIGURE0=PER.EVALUATION&YEAR0=2016' # rubocop:disable Metrics/LineLength
+    url  = "#{base}&branch=#{branch_id}&blocksize=#{@per_page}"
 
     url << "&pageoffset=#{page}" if page > 1
 

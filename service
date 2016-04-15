@@ -6,5 +6,6 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'fetcher'
 
 drop_box = ENV.fetch 'DROP_BOX', File.join(__dir__, 'vendor/mount')
+per_page = ENV.fetch 'PER_PAGE', 20
 
-Fetcher.new(drop_box: drop_box).run
+Fetcher.new(drop_box: drop_box, per_page: per_page).run
