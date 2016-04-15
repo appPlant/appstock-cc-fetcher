@@ -2,7 +2,7 @@ require 'fakefs/spec_helpers'
 
 RSpec.describe Fetcher do
   let(:cc) { 'https://www.consorsbank.de/euroWebDe/servlets/financeinfos_ajax' }
-  let(:base_url) { "#{cc}?version=2&#{params}" }
+  let(:base_url) { "#{cc}?version=2&#{params if defined? params}" }
   let(:fetcher) { described_class.new }
   let(:interfaces) { [:branches, :stocks, :linked_pages, :branch_url, :run] }
   subject { fetcher }
@@ -28,16 +28,15 @@ RSpec.describe Fetcher do
   end
 
   describe '#follow_linked_pages?' do
-    let(:params) { 'page=StocksFinder&FIGURE0=PER.EVALUATION&YEAR0=2016' }
     subject { fetcher.follow_linked_pages? url }
 
     context 'when its the head of the list' do
-      let(:url) { "#{base_url}&branch=100" }
+      let(:url) { fetcher.branch_url(100).to_s }
       it { is_expected.to be_truthy }
     end
 
     context 'when its the tail of the list' do
-      let(:url) { "#{base_url}&branch=100&pageoffset=2" }
+      let(:url) { fetcher.branch_url(1, page: 2).to_s }
       it { is_expected.to be_falsy }
     end
   end
