@@ -67,7 +67,7 @@ RSpec.describe Fetcher do
       end
 
       it('should create no files') do
-        expect(Dir.entries(fetcher.drop_box).count).to be(2)
+        expect(Dir.entries(fetcher.drop_box).count).to eq(2)
       end
     end
   end
@@ -101,7 +101,7 @@ RSpec.describe Fetcher do
       let(:content) { File.read('spec/fixtures/branches.xml') }
       subject { fetcher.branches.count }
       before { stub_request(:get, base_url).to_return(body: content) }
-      it { is_expected.to be(76) }
+      it { is_expected.to eq(76) }
     end
 
     context 'car rental sector' do
@@ -109,7 +109,7 @@ RSpec.describe Fetcher do
 
       describe '#stocks' do
         subject { fetcher.stocks(page).count }
-        it { is_expected.to be(5) }
+        it { is_expected.to eq(5) }
       end
 
       describe '#linked_pages' do
@@ -123,12 +123,12 @@ RSpec.describe Fetcher do
 
       describe '#stocks' do
         subject { fetcher.stocks(page).count }
-        it { is_expected.to be(20) }
+        it { is_expected.to eq(20) }
       end
 
       describe '#linked_pages' do
         subject { fetcher.linked_pages(page).count }
-        it { is_expected.to be(24) }
+        it { is_expected.to eq(24) }
       end
     end
   end

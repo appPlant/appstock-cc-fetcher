@@ -17,7 +17,7 @@ RSpec.shared_examples '#run test suite' do |fixture, branch_id, entry_count|
   describe 'drop box' do
     it('should exist') { expect(File).to exist(drop_box) }
     it("should contain #{entry_count} file#{'s' if entry_count > 1}") do
-      expect(Dir.entries(drop_box).count).to be(entry_count + 2)
+      expect(Dir.entries(drop_box).count).to eq(entry_count + 2)
     end
 
     describe 'files' do
