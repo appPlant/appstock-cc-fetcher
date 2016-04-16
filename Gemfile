@@ -1,8 +1,10 @@
 source 'https://rubygems.org'
 
-gem 'typhoeus'
-gem 'nokogiri'
-gem 'escape_utils'
+raise 'Ruby 2.2 or newer required' unless RUBY_VERSION >= '2.2.0'
+
+gem 'typhoeus', '~> 1.0'
+gem 'nokogiri', '~> 1.6'
+gem 'escape_utils', '~> 1.2'
 
 group :development, :test do
   gem 'pry-nav'
@@ -10,9 +12,9 @@ end
 
 group :test do
   gem 'rake'
-  gem 'rspec'
-  gem 'webmock'
-  gem 'fakefs'
+  gem 'rspec', '~> 3.4'
+  gem 'webmock', '~> 1.24'
+  gem 'fakefs', '~> 0.8'
   gem 'simplecov'
   gem 'codeclimate-test-reporter'
 end
