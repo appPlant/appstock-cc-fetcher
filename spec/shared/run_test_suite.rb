@@ -8,9 +8,8 @@ RSpec.shared_examples '#run test suite' do |fixture, branch_id, entry_count|
     allow(fetcher).to receive(:branches).and_return [branch_id]
   end
 
-  include FakeFS::SpecHelpers
-
   before { fetcher.run }
+  after  { FileUtils.rm_rf fetcher.drop_box }
 
   it { expect(@url).to have_been_requested.times(entry_count) }
 
