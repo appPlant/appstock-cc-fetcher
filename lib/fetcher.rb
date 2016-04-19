@@ -81,12 +81,9 @@ class Fetcher
   #
   # @param [ Nokogiri::HTML ] page A parsed search result page.
   #
-  # @return [ Array<String> ] List of URIs pointing to each stocks page.
+  # @return [ Array<String> ] List of ISIN numbers.
   def stocks(page)
-    url = 'euroWebDe/-?$part=financeinfosHome.Desks.stocks.Desks.snapshot.Desks.snapshotoverview' # rubocop:disable Metrics/LineLength
-    sel = 'row link_target text()'
-
-    page.css(sel).map { |link| abs_url "#{url}&#{CGI.unescapeHTML(link.text)}" }
+    page.css('row link_target text()').map { |link| link.text[-12..-1] }
   end
 
   # Determine whether the fetcher has to follow linked lists in case of
