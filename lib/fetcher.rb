@@ -1,7 +1,6 @@
 require 'typhoeus'
 require 'nokogiri'
 require 'open-uri'
-require 'securerandom'
 
 require 'escape_utils'
 require 'escape_utils/html/cgi'
@@ -10,14 +9,14 @@ require 'escape_utils/html/cgi'
 # To do so it extracts all branches from the search form to make a search
 # request to get all stocks per branch. In case of a paginated response it
 # follows all subsequent linked pages.
-# For each branch a list gets created containing all stock links found on
-# that page with the URL of the page in the first line.
 #
-# @example Start the scraping process.
+# @example Get a list of all stocks.
 #   fetcher.run
+#   #=> ['DE0005140008', ...]
 #
-# @example Scrape all stocks from banking and chemical sector.
+# @example Get a list of all stocks from banking and chemical sector.
 #   fetcher.run([4, 8])
+#   #=> ['DE0005140008', ...]
 #
 # @example Get a list of all stock branches.
 #   fetcher.branches
@@ -34,24 +33,11 @@ require 'escape_utils/html/cgi'
 class Fetcher
   # Intialize the fetcher.
   #
-  # @example With the default drop box location.
-  #   Fetcher.new
-  #
-  # @example With a custom drop box location.
-  #   Fetcher.new drop_box: '/Users/katzer/tmp'
-  #
-  # @param [ String ] drop_box: Optional information where to place the result.
-  # @param [ String ] per_page: Max count of links per page.
-  #                             Default is 20 and the maximum is 50.
-  #
   # @return [ Fetcher ] A new fetcher instance.
-  def initialize(drop_box: 'vendor/mount', per_page: 20)
-    @drop_box = File.join(drop_box, SecureRandom.uuid)
-    @per_page = [0, per_page.to_i].max
-    @hydra    = Typhoeus::Hydra.new
+  def initialize
+    @hydra  = Typhoeus::Hydra.new
+    @stocks = []
   end
-
-  attr_reader :drop_box, :per_page
 
   # Get a list of all branches from the OptionsBranch page.
   #
@@ -135,7 +121,7 @@ class Fetcher
   # @return [ String ] The absolute URL.
   def branch_url(branch_id, page: 1)
     base = 'euroWebDe/servlets/financeinfos_ajax?page=StocksFinder&version=2&FIGURE0=PER.EVALUATION&YEAR0=2016' # rubocop:disable Metrics/LineLength
-    url  = "#{base}&branch=#{branch_id.to_i}&blocksize=#{@per_page}"
+    url  = "#{base}&branch=#{branch_id.to_i}&blocksize=50"
 
     url << "&pageoffset=#{page}" if page > 1
 
@@ -143,25 +129,25 @@ class Fetcher
   end
 
   # Run the hydra with the given links to scrape the stocks from the response.
-  # By default all branches form search page will be used.
+  # By default all branches form search page will be used to return the stocks.
   #
   # @example Scrape all stocks from banking and chemical sector.
   #   run([4, 8])
+  #   #=> ['DE0005140008', ...]
   #
   # @example Scrape all stocks from all branches.
   #   run()
+  #   #=> ['DE0005140008', ...]
   #
   # @param [ Array<Int> ] Optional list of branch IDs.
   #
-  # @return [ Void ]
+  # @return [ Array<String> ] Array of ISIN numbers of all found stocks.
   def run(indizes = branches)
-    return unless indizes.any?
-
-    FileUtils.mkdir_p @drop_box
-
     indizes.each { |branch| scrape branch_url(branch) }
-
     @hydra.run
+    @stocks.dup
+  ensure
+    @stocks.clear
   end
 
   private
@@ -192,26 +178,15 @@ class Fetcher
   #
   # @return [ Void ]
   def on_complete(res)
-    url    = res.request.url
-    page   = Nokogiri::HTML(res.body)
-    stocks = stocks(page)
+    url   = res.request.url
+    page  = Nokogiri::HTML(res.body)
+    isins = stocks(page)
 
-    upload_stocks(stocks.unshift(url)) if stocks.any?
     linked_pages(page, url).each { |p| scrape p } if follow_linked_pages? url
-  end
-
-  # Save the list of stock links in a file. The location of that file is the
-  # former provided @drop_box path or its default value.
-  #
-  # @example To save a file.
-  #   upload_stocks(['https://www.consorsbank.de/ev/aktie/adidas-DE000A1EWWW0'])
-  #   #=> <File:/tmp/0c265f57-999f-497e-9dd0-eb8ee55a8b0e.txt>
-  #
-  # @param [ Array<String> ] stocks List of stock links.
-  #
-  # @return [ File ] The created file.
-  def upload_stocks(stocks)
-    IO.write File.join(@drop_box, "#{SecureRandom.uuid}.txt"), stocks.join("\n")
+  rescue
+    $stderr.puts "[Error] #{url}"
+  ensure
+    @stocks.concat(isins) if defined? isins
   end
 
   # Add host and protocol to the URI to be absolute.

@@ -1,5 +1,3 @@
-require 'fakefs/spec_helpers'
-
 RSpec.describe Fetcher do
   let(:cc) { 'https://www.consorsbank.de/euroWebDe/servlets/financeinfos_ajax' }
   let(:base_url) { "#{cc}?version=2&#{params if defined? params}" }
@@ -51,33 +49,18 @@ RSpec.describe Fetcher do
     end
 
     describe '#fetch' do
-      before { fetcher.run }
-
-      it("should't create the drop box") do
-        expect(File).to_not exist(fetcher.drop_box)
-      end
-    end
-
-    describe '#fetch(automotive supplier)' do
-      include FakeFS::SpecHelpers
-
-      before do
-        stub_request(:get, /branch=2/i).to_timeout
-        fetcher.run([2])
-      end
-
-      it('should create no files') do
-        expect(Dir.entries(fetcher.drop_box).count).to eq(2)
-      end
+      subject { fetcher.run }
+      it { is_expected.to be_empty }
     end
   end
 
   context 'when the response has wrong content' do
     let(:params) { 'page=OptionsBranch' }
-    let(:page) { Nokogiri::HTML('<xml></xml>') }
+    let(:page) { Nokogiri::HTML('') }
+
+    before { stub_request(:get, base_url) }
 
     describe '#branches' do
-      before { stub_request(:get, base_url) }
       subject { fetcher.branches }
       it { is_expected.to be_empty }
     end
@@ -89,6 +72,11 @@ RSpec.describe Fetcher do
 
     describe '#linked_pages' do
       subject { fetcher.linked_pages(page) }
+      it { is_expected.to be_empty }
+    end
+
+    describe '#fetch' do
+      subject { fetcher.run }
       it { is_expected.to be_empty }
     end
   end
@@ -116,6 +104,17 @@ RSpec.describe Fetcher do
         subject { fetcher.linked_pages(page) }
         it { is_expected.to be_empty }
       end
+
+      describe '#run' do
+        before do
+          allow(fetcher).to receive(:branches).and_return([1])
+          @url    = stub_request(:get, /branch=1/i).to_return(body: content)
+          @stocks = fetcher.run.count
+        end
+
+        it { expect(@url).to have_been_requested }
+        it('should return 5') { expect(@stocks).to eq(5) }
+      end
     end
 
     context 'banking sector' do
@@ -130,16 +129,6 @@ RSpec.describe Fetcher do
         subject { fetcher.linked_pages(page).count }
         it { is_expected.to eq(24) }
       end
-    end
-  end
-
-  describe '#run' do
-    context 'when #branches returns car rental only' do
-      include_examples '#run test suite', 'car_rentals.xml', 2, 1
-    end
-
-    context 'when #branches returns banking only' do
-      include_examples '#run test suite', 'banking.xml', 4, 25
     end
   end
 end
