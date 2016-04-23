@@ -4,13 +4,16 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require 'rubygems'
 require 'bundler/setup'
-require 'rspec/core/rake_task'
 
-RSpec::Core::RakeTask.new(:spec) do |t|
-  t.rspec_opts = '--format documentation --color --require spec_helper'
-end
+begin
+  require 'rspec/core/rake_task'
 
-task default: :spec
+  RSpec::Core::RakeTask.new(:spec) do |t|
+    t.rspec_opts = '--format documentation --color --require spec_helper'
+  end
+
+  task default: :spec
+rescue LoadError; end # rubocop:disable Lint/HandleExceptions
 
 desc 'Run Stock-Fetcher for consorsbank.de'
 task :fetch do
