@@ -69,7 +69,7 @@ class Fetcher
   #
   # @return [ Array<String> ] List of ISIN numbers.
   def stocks(page)
-    page.css('row link_target text()').map { |link| link.text[-12..-1] }
+    page.css('row isin text()').map(&:text)
   end
 
   # Determine whether the fetcher has to follow linked lists in case of
