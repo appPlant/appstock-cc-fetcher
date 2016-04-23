@@ -63,7 +63,7 @@ DEPENDENCIES
   fakefs (~> 0.8)
   nokogiri (~> 1.6)
   pry-nav
-  rake
+  rake (~> 11.1)
   rspec (~> 3.4)
   simplecov
   typhoeus (~> 1.0)
