@@ -20,5 +20,5 @@ end
 FileUtils.mkdir_p File.dirname(path)
 File.open(path, 'w+') { |f| stocks.each { |stock| f << "#{stock}\n" } }
 
-puts "Fetched #{stocks.count} stocks"
+puts "Fetched #{stocks.count} stocks from consorsbank"
 puts "Time elapsed #{time.round(2)} seconds"
