@@ -3,7 +3,7 @@ MAINTAINER Sebastian Katzer "katzer@appplant.de"
 
 ENV APP_HOME /usr/app/
 ENV FILE_BOX vendor/mount
-ENV BUILD_PACKAGES ruby-dev libffi-dev libxml2-dev libxslt-dev build-base
+ENV BUILD_PACKAGES ruby-dev libffi-dev libxml2-dev libxslt-dev gcc make libc-dev
 ENV RUBY_PACKAGES ruby curl libxml2 libxslt ruby-bundler ruby-io-console
 
 RUN apk update && \
