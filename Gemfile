@@ -6,6 +6,7 @@ gem 'typhoeus', '~> 1.0'
 gem 'nokogiri', '~> 1.6'
 gem 'escape_utils', '~> 1.2'
 gem 'rake', '~> 11.1'
+gem 'dropbox-sdk', '~> 1.6'
 
 group :development, :test do
   gem 'pry-nav'

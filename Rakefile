@@ -5,32 +5,30 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'rubygems'
 require 'bundler/setup'
 
-begin
-  require 'rspec/core/rake_task'
+require 'rake_helpers/rspec_helper'
+require 'rake_helpers/fetch_helper'
+require 'rake_helpers/cleanup_helper'
+require 'rake_helpers/upload_helper'
 
-  RSpec::Core::RakeTask.new(:spec) do |t|
-    t.rspec_opts = '--format documentation --color --require spec_helper'
-  end
+include RSpecHelper
+include FetchHelper
+include CleanupHelper
+include UploadHelper
 
-  task default: :spec
-rescue LoadError; end # rubocop:disable Lint/HandleExceptions
+set_spec_as_default_task
 
-desc 'Run Stock-Fetcher for consorsbank.de'
-task :fetch do
-  require 'securerandom'
-  require 'benchmark'
-  require 'fetcher'
+namespace :fetch do
+  desc 'Run the fetcher for consorsbank.de'
+  task(:stocks) { run_fetcher_and_create_list }
+end
 
-  path   = File.join(__dir__, "vendor/mount/#{SecureRandom.uuid}.txt")
-  stocks = []
+desc 'Upload list for scraping'
+task(:upload) { upload_list }
 
-  time = Benchmark.realtime do
-    stocks = Fetcher.new.run
-  end
+namespace :cleanup do
+  desc 'Remove the tmp folder'
+  task(:tmp) { rm_tmp_folder }
 
-  FileUtils.mkdir_p File.dirname(path)
-  File.open(path, 'w+') { |f| stocks.each { |stock| f << "#{stock}\n" } }
-
-  puts "Fetched #{stocks.count} stocks from consorsbank"
-  puts "Time elapsed #{time.round(2)} seconds"
+  desc 'Remove the tmp/stocks.txt'
+  task(:list) { rm_list }
 end
