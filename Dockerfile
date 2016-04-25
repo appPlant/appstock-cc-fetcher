@@ -25,7 +25,6 @@ RUN apk del $BUILD_PACKAGES && \
 
 COPY . $APP_HOME
 
-ENV ACCESS_TOKEN JBpL1WEFppAAAAAAAAAACNc-csnJRoL5g8p5coRE35t6oyXzs52TGztXfWDfbXwL
 COPY scripts/ /etc/periodic/
 RUN chmod -R +x /etc/periodic/
 
