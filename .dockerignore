@@ -9,6 +9,7 @@
 bin
 coverage
 *.md
+Dockerfile
 !LICENSE.md
 vendor
 spec

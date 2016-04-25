@@ -35,3 +35,8 @@ namespace :cleanup do
   desc 'Remove all logs'
   task(:log) { rm_logs }
 end
+
+namespace :check do
+  desc 'Check accessibility of the external drive'
+  task(:drive) { drive && puts('OK') }
+end

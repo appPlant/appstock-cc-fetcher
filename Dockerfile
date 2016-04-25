@@ -1,8 +1,6 @@
 FROM alpine:3.3
 MAINTAINER Sebastian Katzer "katzer@appplant.de"
 
-ENV APP_HOME /usr/app/
-ENV FILE_BOX vendor/mount
 ENV BUILD_PACKAGES ruby-dev libffi-dev libxml2-dev libxslt-dev gcc make libc-dev
 ENV RUBY_PACKAGES ruby curl libxml2 libxslt ruby-bundler ruby-io-console
 
@@ -10,14 +8,16 @@ RUN apk update && \
     apk add --no-cache $BUILD_PACKAGES && \
     apk add --no-cache $RUBY_PACKAGES
 
+ENV APP_HOME /usr/app/
 RUN mkdir $APP_HOME
+RUN mkdir $APP_HOME/log
 WORKDIR $APP_HOME
 
 COPY Gemfile $APP_HOME
 COPY Gemfile.lock $APP_HOME
 RUN bundle config path vendor/bundle
 RUN bundle config build.nokogiri --use-system-libraries
-RUN bundle install --no-cache --without documentation development test
+RUN bundle install --no-cache --without development test
 
 RUN apk del $BUILD_PACKAGES && \
     rm -rf /var/cache/apk/* && \
@@ -25,4 +25,8 @@ RUN apk del $BUILD_PACKAGES && \
 
 COPY . $APP_HOME
 
-CMD ["./service"]
+ENV ACCESS_TOKEN JBpL1WEFppAAAAAAAAAACNc-csnJRoL5g8p5coRE35t6oyXzs52TGztXfWDfbXwL
+COPY scripts/ /etc/periodic/
+RUN chmod -R +x /etc/periodic/
+
+CMD ["crond", "-f", "-d", "8"]
