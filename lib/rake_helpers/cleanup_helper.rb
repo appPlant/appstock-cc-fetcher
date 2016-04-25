@@ -11,6 +11,11 @@ module CleanupHelper
     CleanupHelper.rm_rf 'tmp/stocks.txt'
   end
 
+  # Remove all log files.
+  def rm_logs
+    Dir['log/*.log'].each { |file| CleanupHelper.rm_rf file }
+  end
+
   # Remove recusive all files and folders under the specified path.
   #
   # @param [ String ] path

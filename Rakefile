@@ -29,6 +29,9 @@ namespace :cleanup do
   desc 'Remove the tmp folder'
   task(:tmp) { rm_tmp_folder }
 
-  desc 'Remove the tmp/stocks.txt'
+  desc 'Remove the tmp/stocks.txt file'
   task(:list) { rm_list }
+
+  desc 'Remove all logs'
+  task(:log) { rm_logs }
 end
