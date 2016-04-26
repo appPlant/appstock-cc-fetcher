@@ -1,8 +1,5 @@
 #!/bin/sh
 
 cd $APP_HOME && \
-(
-    date && \
-    bundle exec rake fetch:stocks && \
-    bundle exec rake upload
-) >> log/run.log 2>&1 &
+bundle exec rake fetch:stocks && \
+bundle exec rake upload
