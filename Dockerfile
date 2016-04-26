@@ -28,8 +28,9 @@ COPY . $APP_HOME
 COPY scripts/ /etc/periodic/
 RUN chmod -R +x /etc/periodic/
 
-RUN alias ll='ls --color=auto -l'
-RUN alias rake="cd $APP_HOME && bundle exec rake"
+# RUN echo "alias ll='ls -al --color'" >> /etc/profile
+# RUN echo "alias rake='cd $APP_HOME && bundle exec rake'" >> /etc/profile
+# RUN . /etc/profile
 
 CMD ["crond", "-f", "-d", "8"]
-CMD ["bundle", "exec", "rake", "check:drive"]
+# CMD ["rake", "check:drive"]
