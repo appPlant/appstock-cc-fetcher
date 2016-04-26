@@ -2,6 +2,7 @@
 .bundle
 .rspec
 .gitignore
+.dockerignore
 .travis.yml
 .rubocop.yml
 .codeclimate.yml
@@ -14,3 +15,4 @@ Dockerfile
 vendor
 spec
 tmp
+log
