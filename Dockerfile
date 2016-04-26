@@ -29,3 +29,4 @@ COPY scripts/ /etc/periodic/
 RUN chmod -R +x /etc/periodic/
 
 CMD ["crond", "-f", "-d", "8"]
+CMD ["bundle", "exec", "rake", "check:drive"]
