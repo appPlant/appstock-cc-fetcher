@@ -2,4 +2,4 @@
 
 cd $APP_HOME && \
 bundle exec rake fetch:stocks && \
-bundle exec rake upload
+bundle exec rake drive:upload

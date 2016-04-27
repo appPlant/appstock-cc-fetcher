@@ -1,11 +1,11 @@
 require 'dropbox_sdk'
 
-desc 'Upload list for scraping'
-task(:upload) { upload_to_drive }
+namespace :drive do
+  desc 'Upload list for scraping'
+  task(:upload) { upload_to_drive }
 
-namespace :check do
   desc 'Check accessibility of the external drive'
-  task(:drive) { drive && puts('OK') }
+  task(:check) { drive && puts('OK') }
 end
 
 private
