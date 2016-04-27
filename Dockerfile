@@ -24,7 +24,10 @@ RUN bundle install --no-cache --without development test
 
 RUN apk del $BUILD_PACKAGES && \
     rm -rf /var/cache/apk/* && \
-    rm -rf /usr/share/ri
+    rm -rf /usr/share/ri && \
+    rm -rf $APP_HOME/vendor/bundle/cache/*.gem && \
+    rm -rf $APP_HOME/vendor/bundle/gems/*/test/* && \
+    rm -rf $APP_HOME/vendor/bundle/gems/*/spec/*
 
 COPY . $APP_HOME
 COPY scripts/init $APP_HOME/init
