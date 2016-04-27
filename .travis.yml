@@ -20,5 +20,7 @@ cache: bundler
 
 script:
   - bundle exec rake
-  - docker build -t appdax-cc-fetcher .
+  - docker build -t appdax/cc-fetcher .
   - docker ps -a
+  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker push appdax/cc-fetcher
