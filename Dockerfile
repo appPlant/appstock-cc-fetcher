@@ -1,12 +1,15 @@
 FROM alpine:3.3
 MAINTAINER Sebastian Katzer "katzer@appplant.de"
 
-ENV BUILD_PACKAGES ruby-dev libffi-dev libxml2-dev libxslt-dev gcc make libc-dev
+ENV BUILD_PACKAGES ruby-dev libffi-dev libxml2-dev libxslt-dev gcc make libc-dev tzdata
 ENV RUBY_PACKAGES ruby curl libxml2 libxslt ruby-bundler ruby-io-console
 
 RUN apk update && \
     apk add --no-cache $BUILD_PACKAGES && \
     apk add --no-cache $RUBY_PACKAGES
+
+RUN cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+RUN echo "Europe/Berlin" >  /etc/timezone
 
 ENV APP_HOME /usr/app/
 RUN mkdir $APP_HOME
@@ -28,9 +31,4 @@ COPY . $APP_HOME
 COPY scripts/ /etc/periodic/
 RUN chmod -R +x /etc/periodic/
 
-# RUN echo "alias ll='ls -al --color'" >> /etc/profile
-# RUN echo "alias rake='cd $APP_HOME && bundle exec rake'" >> /etc/profile
-# RUN . /etc/profile
-
 CMD ["crond", "-f", "-d", "8"]
-# CMD ["rake", "check:drive"]
