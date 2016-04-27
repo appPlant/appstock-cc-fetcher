@@ -7,7 +7,7 @@
 .rubocop.yml
 .codeclimate.yml
 .DS_Store
-bin
+docker
 coverage
 *.md
 Dockerfile
