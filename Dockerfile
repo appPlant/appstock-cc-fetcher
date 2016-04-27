@@ -1,8 +1,8 @@
 FROM alpine:3.3
 MAINTAINER Sebastian Katzer "katzer@appplant.de"
 
-ENV BUILD_PACKAGES ruby-dev libffi-dev libxml2-dev libxslt-dev gcc make libc-dev tzdata
-ENV RUBY_PACKAGES ruby curl libxml2 libxslt ruby-bundler ruby-io-console
+ENV BUILD_PACKAGES ruby-dev libffi-dev libxslt-dev gcc make libc-dev tzdata
+ENV RUBY_PACKAGES ruby curl libxslt ruby-bundler ruby-io-console
 
 RUN apk update && \
     apk add --no-cache $BUILD_PACKAGES && \
