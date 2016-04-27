@@ -27,8 +27,10 @@ RUN apk del $BUILD_PACKAGES && \
     rm -rf /usr/share/ri
 
 COPY . $APP_HOME
+COPY scripts/init $APP_HOME/init
+RUN chmod -R +x $APP_HOME/init
 
 COPY scripts/ /etc/periodic/
 RUN chmod -R +x /etc/periodic/
 
-CMD ["crond", "-f", "-d", "8"]
+CMD ["./init"]
