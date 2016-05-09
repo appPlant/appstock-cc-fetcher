@@ -1,0 +1,31 @@
+
+[
+    {
+        "BasicV1":{
+            "ID":{
+                "CONSORS_ID":"_67734887",
+                "ID_NOTATION":"67734887",
+                "ISIN":"US30303M1027",
+                "SYMBOL":"FB2A",
+                "WKN":"A1JWVX"
+            },
+            "ID_SECURITY_TYPE":"1",
+            "ID_SUB_SECURITY_TYPE":"111",
+            "ISO_COUNTRY":"US",
+            "IS_SAVINGSPLAN_ALLOWED":true,
+            "NAME_BRANCH":"Internetservice",
+            "NAME_SECTOR":"Informationstechnologie",
+            "NAME_SECURITY":"FACEBOOK INC.",
+            "NAME_SECURITY_SHORT":"FACEBOOK",
+            "NAME_SECURITY_TYPE":"Aktie",
+            "NAME_SUB_SECURITY_TYPE":"Namens-Stammaktie",
+            "REF_INDEX":{
+                "CONSORS_ID":"_324985"
+            },
+            "TOOL_SECURITY_TYPE":"STO"
+        },
+        "Info":{
+            "ID":"US30303M1027"
+        }
+    }
+]
