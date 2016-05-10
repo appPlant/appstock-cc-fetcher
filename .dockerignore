@@ -1,6 +1,5 @@
 .git
 .bundle
-.rspec
 .gitignore
 .dockerignore
 .travis.yml
@@ -10,9 +9,8 @@
 docker
 coverage
 *.md
-Dockerfile
 !LICENSE.md
+Dockerfile*
 vendor
-spec
 tmp
 log
