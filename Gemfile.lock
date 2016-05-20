@@ -51,7 +51,7 @@ GEM
     slop (3.6.0)
     typhoeus (1.0.2)
       ethon (>= 0.9.0)
-    webmock (2.0.2)
+    webmock (2.0.3)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
@@ -73,4 +73,4 @@ DEPENDENCIES
   webmock (~> 2.0)
 
 BUNDLED WITH
-   1.12.1
+   1.12.4
