@@ -1,7 +1,7 @@
 FROM alpine:3.3
 MAINTAINER Sebastian Katzer "katzer@appplant.de"
 
-ENV BUILD_PACKAGES ruby-dev libffi-dev libxslt-dev gcc make libc-dev tzdata
+ENV BUILD_PACKAGES ruby-dev libffi-dev libxslt-dev gcc make libc-dev
 ENV RUBY_PACKAGES ruby git curl libxslt ruby-bundler ruby-io-console
 
 RUN apk update && \
@@ -9,12 +9,8 @@ RUN apk update && \
     apk add --no-cache $RUBY_PACKAGES && \
     gem update --no-ri --no-rdoc
 
-RUN cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime
-RUN echo "Europe/Berlin" > /etc/timezone
-
 ENV APP_HOME /usr/app/
 RUN mkdir $APP_HOME
-RUN mkdir $APP_HOME/log
 WORKDIR $APP_HOME
 
 COPY Gemfile $APP_HOME
