@@ -12,7 +12,7 @@ script:
   - docker build -t appdax/cc-fetcher:test -f Dockerfile.test .
   - docker run -e CODECLIMATE_REPO_TOKEN=$CODECLIMATE_REPO_TOKEN -t appdax/cc-fetcher:test
   - docker rmi -f appdax/cc-fetcher:test
-  - docker build -t appdax/cc-fetcher:edge -f Dockerfile.prod .
+  - docker build -t appdax/cc-fetcher:edge -f Dockerfile .
   - docker ps -a
   - docker images --filter "dangling=false"
 
