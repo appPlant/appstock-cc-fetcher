@@ -7,6 +7,7 @@ gem 'nokogiri', '~> 1.6'
 gem 'escape_utils', '~> 1.2'
 
 gem 'rake', '~> 11.1', require: false
+gem 'whenever', '~> 0.9', require: false
 gem 'dropbox-sdk', '~> 1.6', require: false
 
 group :development, :test do

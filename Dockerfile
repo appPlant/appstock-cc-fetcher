@@ -7,14 +7,13 @@ ENV RUBY_PACKAGES ruby curl libxslt ruby-bundler ruby-io-console
 RUN apk update && \
     apk add --no-cache $BUILD_PACKAGES && \
     apk add --no-cache $RUBY_PACKAGES && \
-    gem update --no-ri --no-rdoc
+    gem update bundler --no-ri --no-rdoc
 
 RUN cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 RUN echo "Europe/Berlin" > /etc/timezone
 
 ENV APP_HOME /usr/app/
 RUN mkdir $APP_HOME
-RUN mkdir $APP_HOME/log
 WORKDIR $APP_HOME
 
 COPY Gemfile $APP_HOME
@@ -24,10 +23,9 @@ RUN bundle config build.nokogiri --use-system-libraries
 RUN bundle install --no-cache --without development test
 
 COPY . $APP_HOME
-COPY scripts/init $APP_HOME/init
-RUN chmod -R +x $APP_HOME/init
 
 RUN apk del $BUILD_PACKAGES && \
+    gem uninstall minitest test-unit power_assert && \
     gem clean && \
     rm -rf /var/cache/apk/* && \
     rm -rf /usr/share/ri && \
@@ -41,7 +39,7 @@ RUN apk del $BUILD_PACKAGES && \
     rm -rf $APP_HOME/.git && \
     rm -rf $APP_HOME/spec
 
-COPY scripts/ /etc/periodic/
-RUN chmod -R +x /etc/periodic/
+RUN chmod -R +x bin
+RUN bundle exec whenever -i
 
-CMD ["./init"]
+CMD ["./bin/init"]

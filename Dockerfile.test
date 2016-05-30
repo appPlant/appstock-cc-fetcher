@@ -7,7 +7,7 @@ ENV RUBY_PACKAGES ruby git curl libxslt ruby-bundler ruby-io-console
 RUN apk update && \
     apk add --no-cache $BUILD_PACKAGES && \
     apk add --no-cache $RUBY_PACKAGES && \
-    gem update --no-ri --no-rdoc
+    gem update bundler --no-ri --no-rdoc
 
 ENV APP_HOME /usr/app/
 RUN mkdir $APP_HOME
@@ -20,22 +20,5 @@ RUN bundle config build.nokogiri --use-system-libraries
 RUN bundle install --no-cache --without development
 
 COPY . $APP_HOME
-COPY scripts/init $APP_HOME/init
-RUN chmod -R +x $APP_HOME/init
-
-RUN apk del $BUILD_PACKAGES && \
-    gem clean && \
-    rm -rf /var/cache/apk/* && \
-    rm -rf /usr/share/ri && \
-    rm -rf $APP_HOME/vendor/bundle/cache/*.gem && \
-    rm -rf $APP_HOME/vendor/bundle/extensions/* && \
-    rm -rf $APP_HOME/vendor/bundle/gems/*/test && \
-    rm -rf $APP_HOME/vendor/bundle/gems/*/spec && \
-    rm -rf $APP_HOME/vendor/bundle/gems/*/doc && \
-    rm -rf $APP_HOME/vendor/bundle/gems/*/examples && \
-    rm -rf $APP_HOME/vendor/bundle/gems/**/*.md
-
-COPY scripts/ /etc/periodic/
-RUN chmod -R +x /etc/periodic/
 
 CMD ["bundle", "exec", "rspec", "spec", "--fail-fast", "--failure-exit-code", "1"]
