@@ -43,7 +43,7 @@ class PreFetcher < BaseFetcher
   # @return [ Array<String> ] A list of branch IDs.
   def branches
     uri  = 'euroWebDe/servlets/financeinfos_ajax?page=OptionsBranch&version=2'
-    page = Nokogiri::HTML(open(abs_url(uri)))
+    page = Nokogiri::HTML(open(abs_url(uri)), nil, 'UTF-8')
     sel  = 'row:not(:first-child) key text()'
 
     page.css(sel).map(&:text)
@@ -150,7 +150,7 @@ class PreFetcher < BaseFetcher
   # @return [ Void ]
   def on_complete(res)
     url   = res.request.url
-    page  = Nokogiri::HTML(res.body)
+    page  = Nokogiri::HTML(res.body, nil, 'UTF-8')
     isins = stocks(page)
 
     linked_pages(page, url).each { |p| scrape p } if follow_linked_pages? url
