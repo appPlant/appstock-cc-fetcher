@@ -1,9 +1,11 @@
-require 'benchmark'
-require 'fetcher'
 
 namespace :fetch do
   desc 'Run the fetcher for consorsbank.de'
-  task(:stocks) { run_fetcher_and_create_list }
+  task(:stocks) do
+    require 'benchmark'
+    require 'fetcher'
+    run_fetcher_and_create_list
+  end
 end
 
 private
@@ -29,6 +31,8 @@ end
 #
 # @param [ Array<String> ] List of fetched ISIN numbers.
 # @param [ String ] path The folder where to place the list.
+#
+# @return [ Void ]
 def create_list(stocks, path = 'tmp')
   FileUtils.mkdir_p File.dirname(path)
   File.open(path, 'w+') { |f| stocks.each { |stock| f << "#{stock}\n" } }

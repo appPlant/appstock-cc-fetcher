@@ -5,10 +5,10 @@ raise 'Ruby 2.2 or newer required' unless RUBY_VERSION >= '2.2.0'
 gem 'typhoeus', '~> 1.0'
 gem 'nokogiri', '~> 1.6'
 gem 'escape_utils', '~> 1.2'
+gem 'dropbox-sdk', '~> 1.6'
 
 gem 'rake', '~> 11.1', require: false
 gem 'whenever', '~> 0.9', require: false
-gem 'dropbox-sdk', '~> 1.6', require: false
 
 group :development, :test do
   gem 'pry-nav'
