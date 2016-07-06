@@ -6,6 +6,7 @@ gem 'typhoeus', '~> 1.0'
 gem 'nokogiri', '~> 1.6'
 gem 'escape_utils', '~> 1.2'
 gem 'dropbox-sdk', '~> 1.6'
+gem 'json', '~> 2.0'
 
 gem 'rake', '~> 11.1', require: false
 gem 'whenever', '~> 0.9', require: false
